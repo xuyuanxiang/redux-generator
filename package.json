@@ -1,6 +1,6 @@
 {
   "name": "redux-generator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "middleware for redux",
   "main": "index.js",
   "scripts": {
