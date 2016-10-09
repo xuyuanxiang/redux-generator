@@ -44,43 +44,53 @@ render(<Provider store={store}>
 </Provider>, container);
 ```
 
-You can write a action creator like this:
+You can write an action creator like this:
 
 ```javascript
-const action = function *(dispatch, getState) {
-    // dispatch an async action
-    dispatch({type: 'LOADING', payload: 'Loading...'});
+// in ./actions/userActionsCreator.js
+export const doSaveUser = (user) => {
+    return function *(dispatch, getState) {
+        // async dispatch an action
+        dispatch({type: 'LOADING', payload: 'Loading...'});
 
-    // waterfall#step 1: plain object yield
-    let params = yield Object.assign({lastModified: new Date().getTime()}, getState().user);
+        // sync waterfall: a plain object yield
+        let params = yield Object.assign({}, user, {lastModified: new Date().getTime()});
 
-    // dispatch an async action
-    dispatch({type: 'WILL_SAVE_USER', payload: params});
+        // async dispatch an action
+        dispatch({type: 'WILL_SAVE_USER', payload: params});
 
-    // waterfall#step 2: promise yield
-    let payload = yield new Promise(resolve=> {
-        process.nextTick(()=> {
-            params.id = '1';
-            resolve(params);
+        // sync waterfall: a promise yield
+        let payload = yield new Promise(resolve=> {
+            process.nextTick(()=> {
+                params.id = '1';
+                resolve(params);
+            });
         });
-    });
 
-    // dispatch an async action
-    dispatch({type: 'DID_SAVE_USER', payload});
+        // async dispatch an action
+        dispatch({type: 'DID_SAVE_USER', payload});
 
-    // waterfall#step 3: thunk yield
-    let redirect = yield ()=> {
-        if (payload && payload.id) {
-            return {type: 'ROUTING_POP', payload: `/user/${payload.id}`};
-        }
+        // sync waterfall: a thunk yield
+        let redirect = yield ()=> {
+            if (payload && payload.id) {
+                return {type: 'ROUTING_POP', payload: `/user/${payload.id}`};
+            }
+        };
+
+        // Only this ending action will be dispatched by generator middleware after all
+        return redirect;
     };
-
-    // waterfall#step 4: Only this ending action will be dispatched after all:
-    return redirect;
-};
+} 
 ```
 
-It will produce these series of actions as follow:
+Dispatch in anywhere:
+
+```javascript
+import {doSaveUser} from './actions/userActionsCreator';
+store.dispatch(doSaveUser({name: 'xyx'}));
+````
+
+These series of actions as follow will be dispatched one by one:
 
 ```
 dispatch action:      { type: 'LOADING', payload: 'Loading' }
@@ -89,13 +99,13 @@ dispatch action:      { type: 'DID_SAVE_USER', payload: { lastModified: 14760054
 dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
 ```
 
-Each action was returned by **syntax** after `yield` will be executed step by step. 
+Each action was returned by **syntax** followed `yield` will be executed step by step. 
 
-If one of `yield` throws error, the others after it will be terminated.
+If one of `yield` throws error, the others behind will be terminated.
 
 Both errors, whether `thunk yield` threw or `promise yield` rejected will be dispatched to next middleware. 
 
-You should resolve them in other ways. Such as appending `errorTranslator` middleware after `generator` middleware to handle error.
+You should resolve them in other ways. Such as appending `errorTranslator` middleware after `generator` middleware.
 
 #### errorTranslator middleware
 
