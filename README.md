@@ -2,15 +2,31 @@
 
 redux-generator is a middleware for [redux](http://redux.js.org/) to resolve action which is [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
 
+## Assets
+```
+                   Asset     Size
+      ./lib/generator.js  17.3 kB
+./lib/errorTranslator.js  1.08 kB
+```
+
 ## Coverage
 ```
---------------|----------|----------|----------|----------|----------------|
-File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
---------------|----------|----------|----------|----------|----------------|
-All files     |      100 |    92.86 |      100 |      100 |                |
- generator.js |      100 |    92.86 |      100 |      100 |                |
---------------|----------|----------|----------|----------|----------------|
+--------------------|----------|----------|----------|----------|----------------|
+File                |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
+--------------------|----------|----------|----------|----------|----------------|
+All files           |      100 |    92.31 |      100 |      100 |                |
+ errorTranslator.js |      100 |    91.67 |      100 |      100 |                |
+ generator.js       |      100 |    92.86 |      100 |      100 |                |
+--------------------|----------|----------|----------|----------|----------------|
+Test Suites: 2 passed, 2 total
+Tests:       15 passed, 15 total
+---------------------------------------------------------------------------------------------
+  
   generator middleware
+  
+    Test Suites: 1 passed, 1 total
+    Tests:       9 passed, 9 total
+    
     ✓ should ignore action is not a function (7ms)
     ✓ should ignore action is not a generator function (2ms)
     ✓ should dispatch plain object yield return value (3ms)
@@ -21,8 +37,21 @@ All files     |      100 |    92.86 |      100 |      100 |                |
     ✓ should dispatch inner error of generator action (1ms)
     ✓ should resolve action with mixins yields (plain object + thunk + promise). (3ms)
 
-Test Suites: 1 passed, 1 total
-Tests:       9 passed, 9 total
+ 
+  
+  errorTranslator middleware
+  
+    Test Suites: 1 passed, 1 total
+    Tests:       6 passed, 6 total
+    
+    ✓ should ignore action is not an error instance. (9ms)
+    ✓ should translate to FSA standard action with default "type" property value: "ERROR". (2ms)
+    ✓ should translate to FSA standard action with custom "type" property was set in initial options.
+    ✓ should translate to FSA standard action contain custom "meta" property was set in initial options. (2ms)
+    ✓ should translate to FSA standard action contain custom "meta" thunk: use the global state to return expected value. (1ms)
+    ✓ should translate to FSA standard action contain custom "meta" thunk: using error code to return expected value. (1ms)
+  
+
 ```
 
 ## Get Started
@@ -42,7 +71,9 @@ import {applyMiddleware, createStore} from 'redux';
 import {Provider} from 'react-redux';
 
 // import redux-generator !important
-import generator from 'redux-generator';
+import {generator} from 'redux-generator';
+// or
+// import generator from 'redux-generator/lib/generator'
 
 // components in your project.
 import reducers from './path/to/your/reducers';
@@ -106,20 +137,132 @@ dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
 
 Both of errors were thrown by `thunk yield` or rejected by `promise yield` will be dispatched to next. 
 
-You should resolve them in other ways:
+You should resolve them in other ways. Such as using `errorTranslator` middleware:
 
-e.g.
+Config inital options:
 ```
-import isError from "lodash/isError";
-const errorTranslator = store => next => action => {
-  if (!isError(action)) {
-    return next(action);
-  }
+import {applyMiddleware} from 'redux';
+import {errorTranslator} from 'redux-generator';
+// or:
+// import errorTranslator from 'redux-generator/lib/errorTranslator';
+
+// initial middleware apply options
+const options = {};
+
+
+applyMiddleware(errorTranslator(options))
+
+```
+--
+
+
++ use default options
+
+```
+options = {} or undefefined
+
+
+// dispatch error in anywhere
+store.dispatch(new Error("FOO"));
+
+// the error will be tranlate to:
+{
+    type: "ERROR",
+    error: true,
+    payload: error // new Error("FOO")
 }
-...
-applyMiddleware(generator, errorTranslator)(createStore);
-...
 ```
+--
+
++ custom options property: `type`
+
+```
+options = {type: 'ALERT'};
+
+// dispatch error in anywhere
+store.dispatch(new Error("FOO"));
+
+// the error will be tranlate to:
+{
+    type: "ALERT",
+    error: true,
+    payload: error // new Error("FOO")
+}
+
+```
+
++ custom options normal property: `meta`.
+
+```
+options = {meta: 'Please try again...'};
+
+// dispatch error in anywhere
+let error = new Error("FOO");
+store.dispatch(error);
+
+// the error will be tranlate to:
+{
+    type: "ERROR",
+    error: true,
+    payload: error, // new Error("FOO")
+    meta: 'Please try again...'
+}
+
+```
+
++ custom options thunk property: `meta` using redux global state to return expected value.
+
+```
+// the redux global state
+globalState = {
+    last_operation: 'UPDATE_USER'
+}
+
+const options = {
+    meta: (error, getState)=> {
+        const state = getState(); // globalState
+        
+        if (state.last_operation) {
+            return state.last_operation;
+        }
+    }
+}
+
+let error = new Error('FOO');
+store.dispatch(error);
+
+let action = {
+    type: "ERROR",
+    error: true,
+    payload: error, // new Error('FOO')
+    meta: 'UPDATE_USER'
+}
+```
+
++ custom options thunk property: `meta` using error code to return expected value.
+
+```
+let error = new Error('Un-Authorization');
+error.code = 401;
+
+const options = {
+    meta: (error, getState)=> {
+        switch (error.code) {
+            case 401:
+                return "Please sign in!";
+        }
+    }
+}
+
+let action = {
+    type: "ERROR",
+    error: true,
+    payload: error, // new Error('Un-Authorization')
+    meta: 'Please sign in!'
+}
+```
+
+
 
 ## Contribution
 

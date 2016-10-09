@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "prerelease": "NODE_ENV=production npm test",
+    "prerelease": "NODE_ENV=production npm test -- --coverage --no-cache",
     "release": "webpack"
   },
   "repository": {
