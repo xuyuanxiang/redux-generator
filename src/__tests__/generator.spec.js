@@ -63,7 +63,7 @@ describe("generator middleware", ()=> {
         expect(next).toHaveBeenCalledWith({type: "FETCHED", payload: {name: 'xyx'}});
     });
 
-    it("should dispatch error is thrown by thunk yield and terminal the next yield", async()=> {
+    it("should dispatch error is thrown by thunk yield and terminate the next yield", async()=> {
         const thunk = jasmine.createSpy('thunk').and.throwError("Something bad happened.");
         const action = function *() {
             let payload = yield thunk; // thunk
@@ -90,7 +90,7 @@ describe("generator middleware", ()=> {
         expect(next).toHaveBeenCalledWith({type: "FETCHED", payload: {name: 'abc'}});
     });
 
-    it("should dispatch error is rejected by promise yield and terminal the next yield", async()=> {
+    it("should dispatch error is rejected by promise yield and terminate the next yield", async()=> {
         const action = function *() {
             let payload = yield new Promise((resolve, reject)=> {
                 process.nextTick(()=> {
