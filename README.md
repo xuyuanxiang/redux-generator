@@ -1,58 +1,8 @@
 # redux-generator
 
+[![Coverage Status](https://coveralls.io/repos/github/xuyuanxiang/redux-generator/badge.svg)](https://coveralls.io/github/xuyuanxiang/redux-generator)
+
 [Redux](http://redux.js.org/) middleware resolves action which is a [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
-
-## Assets
-```
-                   Asset     Size
-      ./lib/generator.js  17.3 kB
-./lib/errorTranslator.js  1.08 kB
-```
-
-## Coverage
-```
---------------------|----------|----------|----------|----------|----------------|
-File                |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
---------------------|----------|----------|----------|----------|----------------|
-All files           |      100 |    92.31 |      100 |      100 |                |
- errorTranslator.js |      100 |    91.67 |      100 |      100 |                |
- generator.js       |      100 |    92.86 |      100 |      100 |                |
---------------------|----------|----------|----------|----------|----------------|
-Test Suites: 2 passed, 2 total
-Tests:       15 passed, 15 total
----------------------------------------------------------------------------------------------
-  
-  generator middleware
-  
-    Test Suites: 1 passed, 1 total
-    Tests:       9 passed, 9 total
-    
-    ✓ should ignore action is not a function (7ms)
-    ✓ should ignore action is not a generator function (2ms)
-    ✓ should dispatch plain object yield return value (3ms)
-    ✓ should dispatch thunk yield return value (3ms)
-    ✓ should dispatch error is thrown by thunk yield and terminal the next yield (3ms)
-    ✓ should dispatch promise yield return value (2ms)
-    ✓ should dispatch error is rejected by promise yield and terminal the next yield (2ms)
-    ✓ should dispatch inner error of generator action (1ms)
-    ✓ should resolve action with mixins yields (plain object + thunk + promise). (3ms)
-
- 
-  
-  errorTranslator middleware
-  
-    Test Suites: 1 passed, 1 total
-    Tests:       6 passed, 6 total
-    
-    ✓ should ignore action is not an error instance. (9ms)
-    ✓ should translate to FSA standard action with default "type" property value: "ERROR". (2ms)
-    ✓ should translate to FSA standard action with custom "type" property was set in initial options.
-    ✓ should translate to FSA standard action contain custom "meta" property was set in initial options. (2ms)
-    ✓ should translate to FSA standard action contain custom "meta" thunk: use the global state to return expected value. (1ms)
-    ✓ should translate to FSA standard action contain custom "meta" thunk: using error code to return expected value. (1ms)
-  
-
-```
 
 ## Get Started
 
