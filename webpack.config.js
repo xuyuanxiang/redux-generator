@@ -4,15 +4,14 @@
  * @date 16/8/17
  */
 var webpack = require('webpack');
-var pkg = require('./package.json');
 var util = require('util');
 
 module.exports = {
-    entry: './src/generator.js',
+    entry: {generator: './src/generator.js', errorTranslator: './src/errorTranslator.js'},
     output: {
-        library: pkg.name,
+        library: '[name]',
         libraryTarget: "umd",
-        filename: util.format("./lib/%s.min.js", pkg.name)
+        filename: "./lib/[name].js"
     },
     module: {
         loaders: [

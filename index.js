@@ -3,4 +3,7 @@
  * Author	Yuanxiang Xu @http://xuyuanxiang.me 
  * Contact	chaos@xuyuanxiang.cn
  */
-module.exports = require('./lib/redux-generator.min');
+module.exports = {
+    generator: require('./lib/generator'),
+    errorTranslator: require('./lib/errorTranslator')
+};

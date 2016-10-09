@@ -90,14 +90,13 @@ const action = function *(dispatch, getState) {
         }
     };
 
-    // waterfall#step 4: the ending action
+    // waterfall#step 4: Only this ending action will be dispatched after all:
     return redirect;
 };
 ```
 
 Each action was returned by `yield` **Syntax** will be executed step by step.
 
-Only the ending(4th) action dispatched after all:
 ```
 dispatch action:      { type: 'LOADING', payload: 'Loading' }
 dispatch action:      { type: 'WILL_SAVE_USER', payload: { lastModified: 1476005411707, name: 'xyx' } }
@@ -105,7 +104,22 @@ dispatch action:      { type: 'DID_SAVE_USER', payload: { lastModified: 14760054
 dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
 ```
 
-*Both of errors threw by `thunk yield` or rejected by `promise yield` will be dispatched to next. You should resolve the errors in other ways.*
+Both of errors were thrown by `thunk yield` or rejected by `promise yield` will be dispatched to next. 
+
+You should resolve them in other ways:
+
+e.g.
+```
+import isError from "lodash/isError";
+const errorTranslator = store => next => action => {
+  if (!isError(action)) {
+    return next(action);
+  }
+}
+...
+applyMiddleware(generator, errorTranslator)(createStore);
+...
+```
 
 ## Contribution
 
