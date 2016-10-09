@@ -189,3 +189,9 @@ dist/
 
 .idea
 
+.babelrc
+
+webpack.config.js
+
+src
+
