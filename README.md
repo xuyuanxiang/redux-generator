@@ -1,6 +1,6 @@
 # redux-generator
 
-redux-generator is a middleware for [redux](http://redux.js.org/) to resolve action which is [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
+[Redux](http://redux.js.org/) middleware resolves action which is a [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
 
 ## Assets
 ```
@@ -63,6 +63,8 @@ npm install redux-generator --save
 
 ### Work with react
 
+#### generator middleware
+
 First, apply middleware:
 ```
 import React from 'react';
@@ -90,7 +92,7 @@ render(<Provider store={store}>
 </Provider>, container);
 ```
 
-You can write action like this:
+You can write a action creator like this:
 
 ```
 const action = function *(dispatch, getState) {
@@ -126,7 +128,7 @@ const action = function *(dispatch, getState) {
 };
 ```
 
-Each action was returned by `yield` **Syntax** will be executed step by step.
+It will produce these series of actions as follow:
 
 ```
 dispatch action:      { type: 'LOADING', payload: 'Loading' }
@@ -135,32 +137,37 @@ dispatch action:      { type: 'DID_SAVE_USER', payload: { lastModified: 14760054
 dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
 ```
 
-Both of errors were thrown by `thunk yield` or rejected by `promise yield` will be dispatched to next. 
+Each action was returned by **syntax** after `yield` will be executed step by step. 
 
-You should resolve them in other ways. Such as using `errorTranslator` middleware:
+If one of `yield` throws error, the others after it will be terminated.
 
-Config inital options:
+Both errors, whether `thunk yield` threw or `promise yield` rejected will be dispatched to next middleware. 
+
+You should resolve them in other ways. Such as appending `errorTranslator` middleware after `generator` middleware to handle error.
+
+#### errorTranslator middleware
+
+Set up initial options when applying:
+
 ```
-import {applyMiddleware} from 'redux';
-import {errorTranslator} from 'redux-generator';
+import {applyMiddleware, createStore} from 'redux';
+import {generator, errorTranslator} from 'redux-generator';
 // or:
 // import errorTranslator from 'redux-generator/lib/errorTranslator';
 
 // initial middleware apply options
 const options = {};
 
-
-applyMiddleware(errorTranslator(options))
-
+// apply middlewares
+applyMiddleware(generator, errorTranslator(options))(createStore)...
 ```
---
 
+---
 
-+ use default options
+Default options property
 
 ```
 options = {} or undefefined
-
 
 // dispatch error in anywhere
 store.dispatch(new Error("FOO"));
@@ -172,9 +179,10 @@ store.dispatch(new Error("FOO"));
     payload: error // new Error("FOO")
 }
 ```
---
 
-+ custom options property: `type`
+---
+
+Custom options property: `type`
 
 ```
 options = {type: 'ALERT'};
@@ -188,10 +196,11 @@ store.dispatch(new Error("FOO"));
     error: true,
     payload: error // new Error("FOO")
 }
-
 ```
 
-+ custom options normal property: `meta`.
+---
+
+Custom options property: `meta`.
 
 ```
 options = {meta: 'Please try again...'};
@@ -207,10 +216,11 @@ store.dispatch(error);
     payload: error, // new Error("FOO")
     meta: 'Please try again...'
 }
-
 ```
 
-+ custom options thunk property: `meta` using redux global state to return expected value.
+---
+
++ Use `meta` thunk to get special meta values from **redux global state**.
 
 ```
 // the redux global state
@@ -239,7 +249,9 @@ let action = {
 }
 ```
 
-+ custom options thunk property: `meta` using error code to return expected value.
+---
+
++ Use `meta` thunk to get special meta value from **different error codes**.
 
 ```
 let error = new Error('Un-Authorization');
