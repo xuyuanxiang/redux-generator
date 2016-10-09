@@ -7,8 +7,9 @@
     "test": "jest",
     "prerelease": "NODE_ENV=production npm test -- --coverage --no-cache",
     "release": "webpack",
-    "postrelease": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "predeploy": "npm run release",
+    "precoveralls": "npm run release",
+    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "predeploy": "npm run coveralls",
     "deploy": "npm publish --registry https://registry.npmjs.org/"
   },
   "repository": {
