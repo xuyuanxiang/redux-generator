@@ -1,6 +1,7 @@
 # redux-generator
 
 [![Coverage Status](https://coveralls.io/repos/github/xuyuanxiang/redux-generator/badge.svg)](https://coveralls.io/github/xuyuanxiang/redux-generator)
+[![Build Status](https://travis-ci.org/xuyuanxiang/redux-generator.svg?branch=master)](https://travis-ci.org/xuyuanxiang/redux-generator)
 
 [Redux](http://redux.js.org/) middleware resolves action which is a [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
 
