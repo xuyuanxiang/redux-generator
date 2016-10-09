@@ -5,10 +5,11 @@
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "prerelease": "NODE_ENV=production npm test -- --coverage --no-cache",
+    "prerelease": "NODE_ENV=production npm test -- --no-cache",
     "release": "webpack",
-    "precoveralls": "npm run release",
+    "precoveralls": "NODE_ENV=production npm test -- --coverage",
     "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
+    "postcoveralls": "webpack",
     "predeploy": "npm run coveralls",
     "deploy": "npm publish --registry https://registry.npmjs.org/"
   },

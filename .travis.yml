@@ -6,3 +6,7 @@ node_js:
   - "4"
 script:
   - npm run release
+addons:
+  sauce_connect:
+    username: "xuyuanxiang"
+    access_key: "aeee9150-b634-41f2-ad13-b6da29501992"
