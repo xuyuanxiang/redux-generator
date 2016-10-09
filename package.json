@@ -1,24 +1,23 @@
 {
   "name": "redux-generator",
   "version": "1.1.7",
-  "description": "middleware for redux",
+  "description": "Redux middleware resolves action which is a generator function",
   "main": "index.js",
   "scripts": {
     "test": "jest",
-    "prerelease": "NODE_ENV=production npm test -- --no-cache",
+    "prerelease": "NODE_ENV=production npm test -- --no-cache --coverage",
     "release": "webpack",
-    "precoveralls": "NODE_ENV=production npm test -- --coverage",
-    "coveralls": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "postcoveralls": "webpack",
-    "predeploy": "npm run coveralls",
-    "deploy": "npm publish --registry https://registry.npmjs.org/"
+    "postrelease": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/xuyuanxiang/redux-generator.git"
   },
   "keywords": [
-    "redux"
+    "redux",
+    "middleware",
+    "generator",
+    "error"
   ],
   "author": "xuyuanxiang <chaos@xuyuanxiang.cn>",
   "license": "MIT",
