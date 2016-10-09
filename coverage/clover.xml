@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<coverage generated="1476007379251" clover="3.2.0">
+  <project timestamp="1476007379251" name="All files">
+    <metrics statements="30" coveredstatements="30" conditionals="14" coveredconditionals="13" methods="9" coveredmethods="9" elements="53" coveredelements="52" complexity="0" loc="30" ncloc="30" packages="1" files="1" classes="1">
+      <file name="generator.js" path="/Users/xuyuanxiang/Workspaces/me/xuyuanxiang/redux-generator/src/generator.js">
+        <metrics statements="30" coveredstatements="30" conditionals="14" coveredconditionals="13" methods="9" coveredmethods="9"/>
+        <line num="8" count="35" type="stmt"/>
+        <line num="9" count="8" type="stmt"/>
+        <line num="11" count="9" type="stmt"/>
+        <line num="12" count="9" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="15" count="8" type="stmt"/>
+        <line num="16" count="8" type="stmt"/>
+        <line num="18" count="8" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="22" count="7" type="stmt"/>
+        <line num="23" count="16" type="stmt"/>
+        <line num="24" count="16" type="stmt"/>
+        <line num="25" count="15" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="31" count="7" type="stmt"/>
+        <line num="32" count="2" type="stmt"/>
+        <line num="33" count="2" type="stmt"/>
+        <line num="35" count="2" type="stmt"/>
+        <line num="39" count="7" type="stmt"/>
+        <line num="40" count="15" type="stmt"/>
+        <line num="41" count="15" type="stmt"/>
+        <line num="42" count="4" type="stmt"/>
+        <line num="44" count="11" type="stmt"/>
+        <line num="45" count="3" type="stmt"/>
+        <line num="46" count="8" type="stmt"/>
+        <line num="47" count="3" type="stmt"/>
+        <line num="48" count="3" type="stmt"/>
+        <line num="50" count="1" type="stmt"/>
+        <line num="53" count="5" type="stmt"/>
+        <line num="56" count="7" type="stmt"/>
+      </file>
+    </metrics>
+  </project>
+</coverage>
