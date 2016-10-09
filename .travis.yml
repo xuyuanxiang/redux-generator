@@ -4,6 +4,9 @@ node_js:
 - '6'
 - '5'
 - '4'
+branches:
+  only:
+  - /^\d{1}\.\d{1,2}.\d{1,2}$/
 before_deploy: "npm run release"
 deploy:
   on:
