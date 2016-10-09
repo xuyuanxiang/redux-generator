@@ -165,7 +165,7 @@ options = {} or undefefined
 // dispatch error in anywhere
 store.dispatch(new Error("FOO"));
 
-// the error will be tranlate to:
+// the error will be tranlated to:
 {
     type: "ERROR",
     error: true,
@@ -182,7 +182,7 @@ options = {type: 'ALERT'};
 // dispatch error in anywhere
 store.dispatch(new Error("FOO"));
 
-// the error will be tranlate to:
+// the error will be tranlated to:
 {
     type: "ALERT",
     error: true,
@@ -200,7 +200,7 @@ options = {meta: 'Please try again...'};
 let error = new Error("FOO");
 store.dispatch(error);
 
-// the error will be tranlate to:
+// the error will be tranlated to:
 {
     type: "ERROR",
     error: true,
