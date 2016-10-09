@@ -9,7 +9,7 @@
 ## Get Started
 
 ### Install
-```
+```bash
 npm install redux-generator --save
 ```
 
@@ -18,7 +18,7 @@ npm install redux-generator --save
 #### generator middleware
 
 First, apply middleware:
-```
+```javascript
 import React from 'react';
 import {render} from 'react-dom';
 import {applyMiddleware, createStore} from 'redux';
@@ -46,7 +46,7 @@ render(<Provider store={store}>
 
 You can write a action creator like this:
 
-```
+```javascript
 const action = function *(dispatch, getState) {
     // dispatch an async action
     dispatch({type: 'LOADING', payload: 'Loading...'});
@@ -101,7 +101,7 @@ You should resolve them in other ways. Such as appending `errorTranslator` middl
 
 Set up initial options when applying:
 
-```
+```javascript
 import {applyMiddleware, createStore} from 'redux';
 import {generator, errorTranslator} from 'redux-generator';
 // or:
@@ -118,7 +118,7 @@ applyMiddleware(generator, errorTranslator(options))(createStore)...
 
 Default options property
 
-```
+```javascript
 options = {} or undefefined
 
 // dispatch error in anywhere
@@ -136,7 +136,7 @@ store.dispatch(new Error("FOO"));
 
 Custom options property: `type`
 
-```
+```javascript
 options = {type: 'ALERT'};
 
 // dispatch error in anywhere
@@ -154,7 +154,7 @@ store.dispatch(new Error("FOO"));
 
 Custom options property: `meta`.
 
-```
+```javascript
 options = {meta: 'Please try again...'};
 
 // dispatch error in anywhere
@@ -174,7 +174,7 @@ store.dispatch(error);
 
 + Use `meta` thunk to get special meta values from **redux global state**.
 
-```
+```javascript
 // the redux global state
 globalState = {
     last_operation: 'UPDATE_USER'
@@ -205,7 +205,7 @@ let action = {
 
 + Use `meta` thunk to get special meta value from **different error codes**.
 
-```
+```javascript
 let error = new Error('Un-Authorization');
 error.code = 401;
 
