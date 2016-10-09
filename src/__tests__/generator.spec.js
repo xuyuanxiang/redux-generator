@@ -120,12 +120,12 @@ describe("generator middleware", ()=> {
         const countingFn = jest.fn();
         store.dispatch = (...args) => {
             countingFn(...args);
-            process.env.NODE_ENV !== 'production' && console.log('**dispatch next\naction:\t', ...args);
+            process.env.NODE_ENV === 'development' && console.log('**dispatch next\naction:\t', ...args);
         };
         spyOn(store, 'getState').and.returnValue({user: {name: 'xyx'}});
         const action = function *(dispatch, getState) {
             // dispatch an async action
-            dispatch({type: 'LOADING', payload: '正在保存'});
+            dispatch({type: 'LOADING', payload: 'Loading'});
 
             // waterfall#step 1: plain object yield
             let params = yield Object.assign({lastModified: new Date().getTime()}, getState().user);

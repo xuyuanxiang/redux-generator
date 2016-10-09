@@ -14,16 +14,6 @@ module.exports = {
         libraryTarget: "umd",
         filename: util.format("./lib/%s.min.js", pkg.name)
     },
-    // externals: [
-    //     {
-    //         lodash: {
-    //             root: "_",
-    //             commonjs: "lodash",
-    //             commonjs2: "lodash",
-    //             amd: "lodash"
-    //         }
-    //     }
-    // ],
     module: {
         loaders: [
             {

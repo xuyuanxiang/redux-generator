@@ -5,8 +5,8 @@
  * @author xuyuanxiang
  * @date 16/10/9
  */
-import isFunction from 'lodash/isFunction';
-import isUndefined from 'lodash/isUndefined';
+const isFunction = val => typeof val === 'function';
+const isUndefined = val => typeof val === 'undefined';
 
 export default store => next => action => {
     if (!isFunction(action)) {

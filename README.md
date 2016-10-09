@@ -10,9 +10,19 @@ File          |  % Stmts | % Branch |  % Funcs |  % Lines |Uncovered Lines |
 All files     |      100 |    92.86 |      100 |      100 |                |
  generator.js |      100 |    92.86 |      100 |      100 |                |
 --------------|----------|----------|----------|----------|----------------|
+  generator middleware
+    ✓ should ignore action is not a function (7ms)
+    ✓ should ignore action is not a generator function (2ms)
+    ✓ should dispatch plain object yield return value (3ms)
+    ✓ should dispatch thunk yield return value (3ms)
+    ✓ should dispatch error is thrown by thunk yield and terminal the next yield (3ms)
+    ✓ should dispatch promise yield return value (2ms)
+    ✓ should dispatch error is rejected by promise yield and terminal the next yield (2ms)
+    ✓ should dispatch inner error of generator action (1ms)
+    ✓ should resolve action with mixins yields (plain object + thunk + promise). (3ms)
+
 Test Suites: 1 passed, 1 total
 Tests:       9 passed, 9 total
-
 ```
 
 ## Get Started
@@ -96,6 +106,19 @@ dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
 ```
 
 *Both of errors threw by `thunk yield` or rejected by `promise yield` will be dispatched to next. You should resolve the errors in other ways.*
+
+## Contribution
+
+### test
+```
+npm test
+```
+
+### build
+```
+npm run release
+```
+
 
 
 
