@@ -73,7 +73,7 @@ const action = function *(dispatch, getState) {
     // dispatch an async action
     dispatch({type: 'DID_SAVE_USER', payload});
 
-    // waterfall#step 3: promise yield
+    // waterfall#step 3: thunk yield
     let redirect = yield ()=> {
         if (payload && payload.id) {
             return {type: 'ROUTING_POP', payload: `/user/${payload.id}`};
@@ -89,7 +89,7 @@ Each action was returned by `yield` **Syntax** will be executed step by step.
 
 Only the ending(4th) action dispatched after all:
 ```
-dispatch action:      { type: 'LOADING', payload: '正在保存' }
+dispatch action:      { type: 'LOADING', payload: 'Loading' }
 dispatch action:      { type: 'WILL_SAVE_USER', payload: { lastModified: 1476005411707, name: 'xyx' } }
 dispatch action:      { type: 'DID_SAVE_USER', payload: { lastModified: 1476005411707, name: 'xyx', id: '1' } }
 dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
