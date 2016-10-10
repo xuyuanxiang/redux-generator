@@ -1,14 +1,16 @@
 {
   "name": "redux-generator",
-  "version": "1.1.13",
+  "version": "1.1.14",
   "description": "Redux middleware resolves action which is a generator function",
   "main": "index.js",
   "scripts": {
     "test": "jest",
     "prerelease": "NODE_ENV=production npm test -- --no-cache --coverage",
-    "release": "webpack --define process.env.NODE_ENV='\"production\"'",
+    "release": "NODE_ENV=production webpack",
     "postrelease": "cat ./coverage/lcov.info | ./node_modules/.bin/coveralls",
-    "build": "webpack"
+    "prestart": "npm install",
+    "start": "NODE_ENV=development webpack --process --colors",
+    "poststart": "babel-node ./sample.js"
   },
   "repository": {
     "type": "git",
@@ -36,10 +38,12 @@
     "babel-preset-stage-1": "^6.16.0",
     "babel-runtime": "^6.11.6",
     "coveralls": "^2.11.14",
+    "flux-standard-action": "^0.6.1",
     "jest": "^16.0.1",
     "jest-cli": "^16.0.1",
-    "webpack": "^1.13.2",
-    "flux-standard-action": "^0.6.1",
-    "lodash": "^4.16.4"
-  }
+    "lodash": "^4.16.4",
+    "redux": "^3.6.0",
+    "webpack": "^1.13.2"
+  },
+  "dependencies": {}
 }

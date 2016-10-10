@@ -63,7 +63,7 @@ describe("generator middleware", ()=> {
         expect(next).toHaveBeenCalledWith({type: "FETCHED", payload: {name: 'xyx'}});
     });
 
-    it("should dispatch error was thrown by thunk yield and terminate the next yield", async()=> {
+    it("should dispatch an error action followed the FSA standard when thunk yield throw Error and terminate the next yield", async()=> {
         const thunk = jasmine.createSpy('thunk').and.throwError("Something bad happened.");
         const action = function *() {
             let payload = yield thunk; // thunk
@@ -73,7 +73,7 @@ describe("generator middleware", ()=> {
         await dispatch(action);
         expect(next).toHaveBeenCalledTimes(1);
         expect(thunk).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('Something bad happened.'));
+        expect(next).toHaveBeenCalledWith({type: 'ERROR', error: true, payload: new Error('Something bad happened.')});
     });
 
     it("should dispatch promise yield return value", async()=> {
@@ -90,7 +90,7 @@ describe("generator middleware", ()=> {
         expect(next).toHaveBeenCalledWith({type: "FETCHED", payload: {name: 'abc'}});
     });
 
-    it("should dispatch error was rejected by promise yield and terminate the next yield", async()=> {
+    it("should dispatch an error action followed the FSA standard when promise yield reject Error and terminate the next yield", async()=> {
         const action = function *() {
             let payload = yield new Promise((resolve, reject)=> {
                 process.nextTick(()=> {
@@ -101,11 +101,11 @@ describe("generator middleware", ()=> {
         };
         await dispatch(action);
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('Something was wrong.'));
+        expect(next).toHaveBeenCalledWith({type: "ERROR", error: true, payload: new Error('Something was wrong.')});
     });
 
 
-    it("should dispatch inner error of generator action", async()=> {
+    it("should dispatch an error action followed the FSA standard when the generator function throw inner Error", async()=> {
         const action = function *() {
             let payload = yield {};
             throw new Error('Something was wrong.');
@@ -113,7 +113,7 @@ describe("generator middleware", ()=> {
         };
         await dispatch(action);
         expect(next).toHaveBeenCalledTimes(1);
-        expect(next).toHaveBeenCalledWith(new Error('Something was wrong.'));
+        expect(next).toHaveBeenCalledWith({type: "ERROR", error: true, payload: new Error('Something was wrong.')});
     });
 
     it("should resolve action with mixins yields (plain object + thunk + promise).", async()=> {

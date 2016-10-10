@@ -54,5 +54,5 @@ export default store => next => action => {
             }
         }
         _resolve();
-    }).then(next, next);
+    }).then(next, error=>next({type: 'ERROR', error: true, payload: error}));
 }

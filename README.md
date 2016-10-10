@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/redux-generator.svg?style=flat-square)](https://www.npmjs.com/package/redux-generator)
 [![Build Status](https://img.shields.io/travis/xuyuanxiang/redux-generator/master.svg?style=flat-square)](https://travis-ci.org/xuyuanxiang/redux-generator)
 
-[Redux](http://redux.js.org/) middleware resolves action which is a [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
+A middleware for [redux](http://redux.js.org/), allows to dispatch an action which is a [generator function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function*).
 
 ## Get Started
 
@@ -16,9 +16,8 @@ npm install redux-generator --save
 
 ### Usage
 
-#### generator middleware
-
 First, apply middleware:
+
 ```javascript
 import {applyMiddleware, createStore} from 'redux';
 
@@ -90,141 +89,58 @@ dispatch action:      { type: 'DID_SAVE_USER', payload: { lastModified: 14760054
 dispatch action:      { type: 'ROUTING_POP', payload: '/user/1' }
 ```
 
-Each action was returned by **syntax** followed `yield` will be executed step by step. 
+Each action was returned by **syntax** followed `yield` will be executed step by step. If one of `yield` throws error, the others behind will be terminated.
 
-If one of `yield` throws error, the others behind will be terminated.
-
-Both errors, whether `thunk yield` threw or `promise yield` rejected will be dispatched to next middleware. 
-
-You should resolve them in other ways. Such as appending `errorTranslator` middleware after `generator` middleware.
-
-#### errorTranslator middleware
-
-Set up initial options when applying:
-
+Both errors, whether `thunk yield` threw or `promise yield` rejected will be translated to [FSA standard](https://github.com/acdlite/flux-standard-action) error action and dispatched:
 ```javascript
-import {applyMiddleware, createStore} from 'redux';
-import {generator, errorTranslator} from 'redux-generator';
-// or:
-// import errorTranslator from 'redux-generator/lib/errorTranslator';
+import {applyMiddleware, combineReducers, createStore} from 'redux';
+import generator from 'redux-generator';
 
-// initial middleware apply options
-const options = {};
-
-// apply middlewares
-applyMiddleware(generator, errorTranslator(options))(createStore)...
-```
-
----
-
-Default options property
-
-```javascript
-options = {} or undefefined
-
-// dispatch error in anywhere
-store.dispatch(new Error("FOO"));
-
-// the error will be tranlated to:
-{
-    type: "ERROR",
-    error: true,
-    payload: error // new Error("FOO")
+const user = (state = {}, action)=> {
+    console.log('action>>>reducer:\t', action);
+    return state;
 }
-```
+const reducers = combineReducers({user});
+const store = applyMiddleware(generator)(createStore)(reducers);
 
----
-
-Custom options property: `type`
-
-```javascript
-options = {type: 'ALERT'};
-
-// dispatch error in anywhere
-store.dispatch(new Error("FOO"));
-
-// the error will be tranlated to:
-{
-    type: "ALERT",
-    error: true,
-    payload: error // new Error("FOO")
-}
-```
-
----
-
-Custom options property: `meta`.
-
-```javascript
-options = {meta: 'Please try again...'};
-
-// dispatch error in anywhere
-let error = new Error("FOO");
-store.dispatch(error);
-
-// the error will be tranlated to:
-{
-    type: "ERROR",
-    error: true,
-    payload: error, // new Error("FOO")
-    meta: 'Please try again...'
-}
-```
-
----
-
-+ Use `meta` thunk to get special meta values from **redux global state**.
-
-```javascript
-// the redux global state
-globalState = {
-    last_operation: 'UPDATE_USER'
-}
-
-const options = {
-    meta: (error, getState)=> {
-        const state = getState(); // globalState
-        
-        if (state.last_operation) {
-            return state.last_operation;
-        }
+// action>>>reducer:    { type: 'ERROR', error: true, payload: [Error: foo] }
+store.dispatch(function *action() {
+    let payload = yield () => {
+        throw new Error('foo');
     }
-}
 
-let error = new Error('FOO');
-store.dispatch(error);
+    // never be executed
+    let redirect = yield {type: 'ROUTING_POP', payload};
+    return redirect;
+});
 
-let action = {
-    type: "ERROR",
-    error: true,
-    payload: error, // new Error('FOO')
-    meta: 'UPDATE_USER'
-}
-```
+// action>>>reducer:    { type: 'ERROR', error: true, payload: [Error: bar] }
+store.dispatch(function *action() {
+    let payload = yield new Promise((resolve, reject)=> {
+        process.nextTick(()=>reject(new Error('bar')));
+    });
 
----
+    // never be executed
+    let redirect = yield {type: 'ROUTING_POP', payload};
 
-+ Use `meta` thunk to get special meta value from **different error codes**.
+    return redirect;
+});
 
-```javascript
-let error = new Error('Un-Authorization');
-error.code = 401;
+// action>>>reducer:    { type: 'ERROR', error: true, payload: [Error: Inner error] }
+store.dispatch(function *action() {
+    throw new Error('Inner error');
 
-const options = {
-    meta: (error, getState)=> {
-        switch (error.code) {
-            case 401:
-                return "Please sign in!";
-        }
+    // never be executed
+    let params = yield ()=> {
+        return {name: 'xyx'};
     }
-}
 
-let action = {
-    type: "ERROR",
-    error: true,
-    payload: error, // new Error('Un-Authorization')
-    meta: 'Please sign in!'
-}
+    // never be executed
+    let payload = yield new Promise((resolve)=> {
+        process.nextTick(()=>resolve(Object.assign(params, {id: 1})));
+    });
+    return {type: "SAVE", payload};
+});
 ```
 
 
