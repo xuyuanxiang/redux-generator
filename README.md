@@ -33,9 +33,6 @@ import reducers from './path/to/your/reducers';
 // apply redux-generator
 const createStoreWithMiddleware = applyMiddleware(generator)(createStore);
 const store = createStoreWithMiddleware(reducers);
-
-const container = document.createElement('div');
-document.body.appendChild(container);
 ```
 
 You can write an action creator like this:
