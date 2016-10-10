@@ -5,10 +5,7 @@
  * @author xuyuanxiang
  * @date 16/10/9
  */
-const isError = value => {
-    return (Object.prototype.toString.call(value) == '[object Error]') ||
-        (value && typeof value.message == 'string' && typeof value.name == 'string');
-}
+import isError from 'lodash/isError';
 
 export default ({type, meta})=> store => next => action=> {
     if (!isError(action)) {

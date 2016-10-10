@@ -23,6 +23,7 @@ module.exports = {
         ]
     },
     plugins: [
+        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
@@ -30,9 +31,14 @@ module.exports = {
             },
             output: {
                 comments: false
+            },
+            compressor: {
+                pure_getters: true,
+                unsafe: true,
+                unsafe_comps: true,
+                warnings: false
             }
         }),
-        new webpack.optimize.OccurrenceOrderPlugin(),
         new webpack.BannerPlugin("This source code is licensed under MIT: http://www.opensource.org/licenses/mit-license.php \nAuthor\tYuanxiang Xu @http://xuyuanxiang.me \nContact\tchaos@xuyuanxiang.cn")
     ]
 }

@@ -8,40 +8,34 @@
 
 ## Get Started
 
-### Install
+### Installation
+
 ```bash
 npm install redux-generator --save
 ```
 
-### Work with react
+### Usage
 
 #### generator middleware
 
 First, apply middleware:
 ```javascript
-import React from 'react';
-import {render} from 'react-dom';
 import {applyMiddleware, createStore} from 'redux';
-import {Provider} from 'react-redux';
 
-// import redux-generator !important
+// import redux-generator
 import {generator} from 'redux-generator';
 // or
 // import generator from 'redux-generator/lib/generator'
 
-// components in your project.
+// reducers in your project.
 import reducers from './path/to/your/reducers';
-import App from './path/to/your/app';
 
-// apply redux-generator !important
+// apply redux-generator
 const createStoreWithMiddleware = applyMiddleware(generator)(createStore);
 const store = createStoreWithMiddleware(reducers);
 
 const container = document.createElement('div');
 document.body.appendChild(container);
-render(<Provider store={store}>
-    <App/>
-</Provider>, container);
 ```
 
 You can write an action creator like this:
@@ -249,9 +243,3 @@ npm test
 ```
 npm run release
 ```
-
-
-
-
-
-
