@@ -195,3 +195,7 @@ webpack.config.js
 
 src
 
+.coveralls.yml
+
+.travis.yml
+

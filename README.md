@@ -20,15 +20,10 @@ First, apply middleware:
 
 ```javascript
 import {applyMiddleware, createStore} from 'redux';
-
 // import redux-generator
-import {generator} from 'redux-generator';
-// or
-// import generator from 'redux-generator/lib/generator'
-
+import generator from 'redux-generator';
 // reducers in your project.
 import reducers from './path/to/your/reducers';
-
 // apply redux-generator
 const createStoreWithMiddleware = applyMiddleware(generator)(createStore);
 const store = createStoreWithMiddleware(reducers);

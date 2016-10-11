@@ -1,6 +1,6 @@
 {
   "name": "redux-generator",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Redux middleware resolves action which is a generator function",
   "main": "index.js",
   "scripts": {
